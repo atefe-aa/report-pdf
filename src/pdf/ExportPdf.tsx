@@ -1,116 +1,108 @@
+import { useRef, useEffect, useState } from "react";
+import html2pdf from "html2pdf.js";
+import { report } from "../assets/constatnts";
 import { ReportHeader } from "./ReportHeader";
 import { ReportPatient } from "./ReportPatient";
 import { ReportFooter } from "./ReportFooter";
 import { ReportSignature } from "./ReportSignature";
 import { PrintableReport } from "./PrintableReport";
+import { ReportImages } from "./ReportImages";
 
 import "../assets/fonts/fonts.css";
-import { useRef } from "react";
-import { ReportImages } from "./ReportImages";
-import { report } from "../assets/constatnts";
+import { ReportComments } from "./ReportComments";
 
 const ExportPdf = () => {
-  const printRef = useRef<HTMLDivElement>(null);
+  const pdfRef = useRef<HTMLDivElement>(null);
+  const [contentVisible, setContentVisible] = useState(false);
 
-  const handlePrint = () => {
-    if (printRef.current) {
-      const printWindow = window.open(
-        "",
-        "PRINT",
-        "height=650,width=900,top=100,left=150"
-      );
+  useEffect(() => {
+    // Wait for the component to mount before setting contentVisible to true
+    setContentVisible(true);
+  }, []);
 
-      // Ensure the window opened
-      if (printWindow && printWindow.document) {
-        printWindow.document.write(
-          `<html><head><title>${report.test.name}-${
-            report.test.senderRegistrationCode || report.test.id
-          }</title>`
-        );
-        // Optionally, add any required styles here
-        printWindow.document.write("</head><body>");
-        printWindow.document.write(printRef.current.innerHTML);
-        printWindow.document.write("</body></html>");
+  const handlePdf = () => {
+    const element = pdfRef.current;
+    if (!element) return;
 
-        printWindow.document.close(); // necessary for IE >= 10
+    const opt = {
+      margin: 0,
+      filename: "report.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
 
-        printWindow.focus(); // necessary for IE >= 10*/
-
-        setTimeout(() => {
-          // Delay to ensure QR code is fully rendered
-          printWindow.print();
-          printWindow.close();
-        }, 1000); // Adjust time as necessar
-      }
-
-      return true;
-    }
+    html2pdf().set(opt).from(element).save();
   };
+  const commentsSection = report.sections.find((section) => {
+    const hasCommentsOption = section.groups.some((group) =>
+      group.options.some((option) => option.label === "Comments")
+    );
+    return hasCommentsOption || section.sectionTitle === "Comments";
+  });
+  console.log(commentsSection);
 
+  const commentsValue = commentsSection
+    ? commentsSection.groups[0].options[0].value.toString()
+    : "";
   return (
     <>
       <div className="bg-light text-end">
-        <button className="btn btn-primary me-5 " onClick={handlePrint}>
+        <button className="btn btn-primary me-5 " onClick={handlePdf}>
           Download
         </button>
       </div>
 
       <div
-        ref={printRef}
+        ref={pdfRef}
         id="pdf-content"
         style={{
           overflow: "scroll",
-          height: "100vh",
+          color: "black",
           display: "flex",
-          // flexDirection:"column",
           justifyContent: "center",
           fontFamily: "IranSans",
+          minHeight: "100vh", // Ensure the content takes up at least the full viewport height
         }}
       >
-        <div style={{height:"100%"}}>
-          <div
-            className="bg-white text-black "
-            style={{ width: "210mm", height: "297mm", position: "relative" }}
-          >
-            <ReportHeader />
-            <ReportPatient test={report.test} />
-            <PrintableReport sections={report.sections} />
-            <ReportSignature />
-            <ReportFooter />
-          </div>
-          {report.test.images.length > 0 && (
+        {contentVisible && (
+          <div>
             <div
-              className="bg-white text-black  "
-              //  style={{
-              //   marginTop: `${
-              //     section.sectionTitle === "GLANDULAR CELLS"
-              //       ? "170px"
-              //       : "auto"
-              //   }`,
-              //   pageBreakBefore: `${
-              //     section.sectionTitle === "GLANDULAR CELLS"
-              //       ? "always"
-              //       : "auto"
-              //   }`,
-              // }}
-              style={{
-                width: "210mm",
-                height: "297mm",
-                position: "relative",
-                marginTop: "10px",
-                pageBreakBefore: "always",
-              }}
+              className="bg-white text-black "
+              style={{ width: "210mm", height: "280mm", position: "relative" }}
             >
               <ReportHeader />
               <ReportPatient test={report.test} />
-              <ReportImages  />
+              <PrintableReport sections={report.sections} />
               <ReportSignature />
               <ReportFooter />
             </div>
-          )}
-        </div>
+            {report.test.images.length > 0 && (
+              <div
+                className="bg-white text-black  "
+                style={{
+                  width: "210mm",
+                  height: "275mm",
+                  position: "relative",
+                  marginTop: "10px",
+                }}
+              >
+                <ReportHeader />
+                <ReportPatient test={report.test} />
+                {commentsValue.length > 0 && (
+                  <ReportComments comment={commentsValue} />
+                )}
+
+                <ReportImages />
+                <ReportSignature />
+                <ReportFooter />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </>
   );
 };
+
 export { ExportPdf };

@@ -8,7 +8,7 @@ export const report = {
     ageUnit: "year",
     gender: "female",
     date: "1403/01/20 03:52",
-    doctorName: "دکتر مسعودی",
+    doctorName: "دکتر مسعودیآقای دکتر",
     senderRegistrationCode: "12",
     images: [
       {

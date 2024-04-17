@@ -14,7 +14,7 @@ const ReportPatient: React.FC<Props> = ({ test }) => {
       alignItems:"center",
       justifyContent:"center",
       border: "1px solid #57BA32",
-      padding: "5px",
+      padding: "2px",
       textAlign: "center" as TextAlign,
       
     },
@@ -49,7 +49,7 @@ const ReportPatient: React.FC<Props> = ({ test }) => {
           PATIENT
         </span>
       </div>
-      <div style={{ width: "93%", margin: "0 10px",minHeight:"20mm"  }}>
+      <div style={{ width: "93%", margin: "0 10px",minHeight:"18mm"  }}>
         <div style={styles.thead}>
           <div style={styles.tr}>
             <div style={{...styles.td,width:"12%"}}>Admit No.</div>
