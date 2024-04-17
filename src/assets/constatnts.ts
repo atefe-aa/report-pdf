@@ -2,13 +2,13 @@ export const report = {
   id: 10,
   test: {
     id: 10,
-    name: "kpokp",
+    name: "سارا حیدری",
     nationalId: "5548787765",
     age: 454,
     ageUnit: "year",
     gender: "female",
     date: "1403/01/20 03:52",
-    doctorName: "kljii",
+    doctorName: "دکتر مسعودی",
     senderRegistrationCode: "12",
     images: [
       {
