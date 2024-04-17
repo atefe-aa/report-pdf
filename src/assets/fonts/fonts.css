@@ -1,0 +1,13 @@
+@font-face {
+  font-family: "IranSans";
+  src: url("IRANSans.ttf") format("truetype");
+}
+@font-face {
+  font-family: "IranSansBold";
+  src: url("IRANSans_Bold.ttf") format("truetype");
+}
+@font-face {
+  font-family: "Vazir";
+  src: url("Vazir.ttf") format("truetype");
+}
+
