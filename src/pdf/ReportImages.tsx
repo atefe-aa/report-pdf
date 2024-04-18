@@ -60,7 +60,7 @@ const ReportImages = () => {
                 width: "auto",
                 height: "auto",
               }}
-              src="image.png"
+              src= "http://localhost:8000/storage/report-images/YrKReqXQVsiNSfuoW4NZwUuQ3QrBcjDOzQcBqXnd.jpg"
             />
           </div>
      
